@@ -75,7 +75,7 @@ function compression (options) {
 
     // proxy
 
-    res.write = function write (chunk, encoding) {
+    res.write = function write (chunk, encoding, cb) {
       if (ended) {
         return false
       }
@@ -85,8 +85,8 @@ function compression (options) {
       }
 
       return stream
-        ? stream.write(Buffer.from(chunk, encoding))
-        : _write.call(this, chunk, encoding)
+        ? stream.write(Buffer.from(chunk, encoding), cb)
+        : _write.call(this, chunk, encoding, cb)
     }
 
     res.end = function end (chunk, encoding) {
