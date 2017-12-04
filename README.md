@@ -1,5 +1,9 @@
 # compression
 
+## Why did FamilySearch Fork Compression?
+
+compression overwrites `res.write` and removes node's built-in callback exposed by that function. I (Joe Podwys) have submitted two different PRs and others in the open source community have submitted issues and PRs to address this, but Doug Wilson, compression's maintainer, is unwilling to expose the `callback` parameter. On a related note, `res.write` is not blocking and, therefore, `res.write` may not have completed when `res.flush` is called. This race condition makes streaming responses useless. As a result, I've forked this repo, added the callback to `res.write`, and we can now use that callback to avoid this race condition while streaming.
+
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Build Status][travis-image]][travis-url]
