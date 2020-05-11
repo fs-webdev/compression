@@ -1,16 +1,6 @@
 language: node_js
 node_js:
-  - "0.8"
-  - "0.10"
-  - "0.12"
-  - "1.8"
-  - "2.5"
-  - "3.3"
-  - "4.8"
-  - "5.12"
-  - "6.11"
-  - "7.10"
-  - "8.4"
+  - 12
 sudo: false
 cache:
   directories:
@@ -26,6 +16,9 @@ before_install:
   # Update Node.js modules
   - "test ! -d node_modules || npm prune"
   - "test ! -d node_modules || npm rebuild"
+
+  - echo "//repo.churchofjesuschrist.org/artifactory/api/npm/npm-fhd/:_authToken=${NPM_PUBLISH_TOKEN}" >> .npmrc
+  - echo "@fs:registry=https://repo.churchofjesuschrist.org/artifactory/api/npm/npm-fhd/" >> .npmrc
 script:
   # Run test script, depending on istanbul install
   - "test ! -z $(npm -ps ls istanbul) || npm test"
@@ -33,3 +26,10 @@ script:
   - "test   -z $(npm -ps ls eslint  ) || npm run-script lint"
 after_script:
   - "test -e ./coverage/lcov.info && npm install coveralls@2 && cat ./coverage/lcov.info | coveralls"
+deploy:
+  provider: npm
+  skip_cleanup: true
+  email: "dl-fh-eng-frontier@groups.ldschurch.org"
+  api_key: "$NPM_PUBLISH_TOKEN"
+  on:
+    branch: master 
